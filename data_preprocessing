@@ -1,0 +1,26 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from preprocess import preprocess_data
+
+# Load the trained model
+model = joblib.load('results/linear_regression_model.pkl')
+
+# Load and preprocess the data
+data = pd.read_csv('data/raw/stock_data.csv')
+data = preprocess_data(data)
+
+# Make predictions
+X = data[['Open', 'High', 'Low', 'Volume', 'MA50', 'MA200']]
+y = data['Close']
+predictions = model.predict(X)
+
+# Plot actual vs predicted prices
+plt.figure(figsize=(14, 7))
+plt.plot(data['Date'], y, label='Actual Prices', color='blue')
+plt.plot(data['Date'], predictions, label='Predicted Prices', color='red')
+plt.title('Actual vs Predicted Stock Prices')
+plt.xlabel('Date')
+plt.ylabel('Stock Price')
+plt.legend()
+plt.savefig('results/plots/predictions_vs_actual.png')  # Save the image to a file
+plt.show()
